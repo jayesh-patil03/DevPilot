@@ -1,18 +1,21 @@
-# DevPilot 🚀
+# DevPilot 🚀 — AI-Powered GitHub Codebase Assistant
 
-**An AI-powered GitHub repository assistant that helps developers understand and explore their codebases using natural language.**
+An AI-powered GitHub repository assistant that helps developers understand and explore their codebases using natural language.
 
-DevPilot is a full-stack application designed to help developers interact with their GitHub repositories through an AI-powered chat interface. It combines Spring Boot, Next.js, Google Gemini, PostgreSQL, and pgvector to support a retrieval-augmented generation (RAG) architecture for codebase question answering.
+**🌐 Live Demo:** [https://dev-pilot-gules.vercel.app](https://dev-pilot-gules.vercel.app)  
+**💻 GitHub Repository:** [https://github.com/jayesh-patil03/DevPilot](https://github.com/jayesh-patil03/DevPilot)
+
+DevPilot is a full-stack application that allows developers to connect GitHub repositories, index source code, and ask questions through an AI-powered chat interface. It uses Retrieval-Augmented Generation (RAG) to retrieve relevant code context and generate contextual answers.
 
 ## ✨ Features
 
-- **GitHub OAuth Authentication:** Sign in and authorize access to GitHub repositories.
-- **Repository Integration:** Connect GitHub repositories to the application.
-- **AI-Powered Code Assistance:** Ask questions about a codebase using natural language.
-- **Retrieval-Augmented Generation (RAG):** Retrieve relevant code context to help generate more relevant answers.
-- **Vector Storage:** Use PostgreSQL with pgvector to store and search vector embeddings.
-- **Code Indexing:** Process repository files into chunks for retrieval.
-- **Modern Web Interface:** Use a Next.js frontend to access the application's authentication, dashboard, and chat interfaces.
+- **GitHub OAuth 2.0:** Authenticate users and access authorized repositories.
+- **Repository Integration:** Connect and browse GitHub repositories.
+- **AI-Powered Code Assistance:** Ask natural-language questions about a codebase.
+- **RAG Architecture:** Retrieve relevant code chunks to ground AI-generated responses.
+- **Semantic Search:** Store and search vector embeddings using PostgreSQL and pgvector.
+- **Code Indexing:** Split repository source files into chunks for embedding and retrieval.
+- **Modern UI:** Access authentication, repository management, and code-focused chat through Next.js.
 
 ## 🏗️ Architecture
 
@@ -20,122 +23,187 @@ DevPilot is a full-stack application designed to help developers interact with t
                  Developer
                      |
                      v
-              Next.js Frontend
-                localhost:3000
+             Next.js Frontend
+                  Vercel
+                     |
+              HTTPS API Requests
                      |
                      v
-              Spring Boot Backend
-                localhost:8080
-                /      |       \
-               /       |        \
-              v        v         v
-          GitHub    Gemini AI  PostgreSQL
-          OAuth     Chat and    + pgvector
-                    Embeddings
-                                  |
-                                  v
+            Spring Boot Backend
+                  Render
+              /      |       \
+             /       |        \
+            v        v         v
+         GitHub    Gemini    Neon PostgreSQL
+         OAuth     AI API      + pgvector
+                                 |
+                                 v
                          Vector Similarity Search
 ```
 
-The application is designed around a retrieval-augmented generation workflow:
+### Deployment architecture
 
-1. Authenticate the user with GitHub.
-2. Access and process the selected repository.
-3. Split relevant source files into smaller chunks.
-4. Generate embeddings for searchable code context.
-5. Store embeddings in PostgreSQL using pgvector.
-6. Retrieve relevant chunks when a user asks a question.
-7. Use the retrieved context to help the AI generate an answer.
+| Component | Technology | Hosting |
+|---|---|---|
+| Frontend | Next.js, React, TypeScript | Vercel |
+| Backend | Java 21, Spring Boot, Spring AI | Render |
+| Database | PostgreSQL, pgvector | Neon |
+| Authentication | GitHub OAuth 2.0 | GitHub OAuth App |
+| AI services | Google Gemini | Gemini API |
 
-### Core stack
+## 🧠 How It Works
 
-- Backend: Java 21, Spring Boot, Spring Security, Spring AI, JPA, PostgreSQL
-- AI: Google Gemini models for chat and embeddings
-- Vector search: pgvector via Spring AI VectorStore
-- Frontend: Next.js, React, Tailwind CSS, TypeScript
-- Infrastructure: Docker Compose for PostgreSQL
+1. The user signs in through GitHub OAuth.
+2. DevPilot retrieves the user's authorized repositories.
+3. Selected repository files are fetched and processed.
+4. Source code is split into smaller chunks.
+5. Gemini generates embeddings for searchable code context.
+6. Embeddings are stored in PostgreSQL using pgvector.
+7. When the user asks a question, relevant code chunks are retrieved through vector similarity search.
+8. The retrieved context is supplied to the AI model to generate a relevant answer.
 
-## Repository structure
+## 🛠️ Tech Stack
+
+**Backend:** Java 21, Spring Boot, Spring Security, Spring AI, Spring Data JPA, Hibernate, Maven
+
+**Frontend:** Next.js, React, TypeScript, Tailwind CSS
+
+**AI and Vector Search:** Google Gemini, embeddings, Retrieval-Augmented Generation (RAG), PostgreSQL, pgvector
+
+**Authentication:** GitHub OAuth 2.0
+
+**Deployment and Tools:** Docker, Docker Compose, Render, Vercel, Neon, Git, GitHub
+
+## 🌐 Live Deployment
+
+Try DevPilot here:
+
+**[Launch DevPilot →](https://dev-pilot-gules.vercel.app)**
+
+The frontend, backend, and database are deployed separately:
+
+- **Frontend:** [https://dev-pilot-gules.vercel.app](https://dev-pilot-gules.vercel.app)
+- **Backend:** [https://devpilot-backend-63ih.onrender.com](https://devpilot-backend-63ih.onrender.com)
+- **Database:** Hosted on Neon PostgreSQL with pgvector.
+
+### Deployment notes
+
+- The frontend communicates with the Spring Boot backend over HTTPS.
+- Backend credentials and API keys are configured using hosting-platform environment variables.
+- GitHub OAuth uses the deployed backend callback URL.
+- PostgreSQL connection settings are configured through environment variables.
+- The backend is containerized using Docker and deployed on Render.
+- Render's free instance may sleep after inactivity, which can cause a delay on the first request.
+- Gemini API quota restrictions may temporarily prevent repository indexing or AI responses.
+
+## 📁 Repository Structure
 
 ```text
 DEVPILOT/
-├── backend/                  # Spring Boot API server
-│   ├── src/main/java/        # Java application code
-│   ├── src/main/resources/   # application.properties and static assets
-│   ├── pom.xml              # Maven configuration
-│   └── mvnw                 # Maven wrapper
-├── client/                  # Next.js frontend
-│   ├── app/                 # App router pages
-│   ├── components/          # UI components
-│   ├── lib/                 # Client-side utilities
-│   ├── package.json         # Frontend dependencies and scripts
-│   └── next.config.ts
-├── docker/                  # Docker-related config
-├── docker-compose.yml       # PostgreSQL service definition
-├── .env.example             # Sample environment variables
+├── backend/                  # Spring Boot backend
+│   ├── src/main/java/        # Java source code
+│   ├── src/main/resources/   # Application configuration
+│   ├── Dockerfile            # Backend Docker image
+│   ├── pom.xml               # Maven dependencies
+│   └── mvnw                  # Maven wrapper
+├── client/                   # Next.js frontend
+│   ├── app/                  # App Router pages
+│   ├── components/           # UI components
+│   ├── hooks/                # Custom React hooks
+│   ├── lib/                  # API and client utilities
+│   └── package.json          # Frontend dependencies
+├── docker/
+│   └── postgres/             # PostgreSQL initialization
+├── docker-compose.yml        # Local PostgreSQL service
+├── .env.example              # Environment variable template
 ├── .gitignore
-└── README.md                # Project documentation
+└── README.md
 ```
 
-## Prerequisites
+## ⚙️ Prerequisites
 
-Before running the project locally, make sure you have:
+To run DevPilot locally, install:
 
 - Java 21+
 - Maven or the included Maven wrapper
-- Node.js 20+
-- npm
+- Node.js and npm
 - Docker Desktop or Docker Engine
-- A GitHub OAuth app configured for local authentication
-- A Gemini API key
+- A GitHub OAuth App
+- A Google Gemini API key
 
-## Configuration
+## 🔐 Environment Configuration
 
-Copy the example environment file and fill in the required values:
+Create a local `.env` file from the example template:
 
 ```bash
 cp .env.example .env
 ```
 
-The root `.env` file is used by Docker and by the backend environment. At minimum, configure:
+Configure the required variables with your own credentials:
 
 ```env
+DB_NAME=devpilot
 DB_URL=jdbc:postgresql://localhost:5433/devpilot
 DB_USERNAME=postgres
-DB_PASSWORD=your_secure_password
+DB_PASSWORD=your_secure_database_password
+
 GEMINI_API_KEY=your_gemini_api_key
+
 GITHUB_CLIENT_ID=your_github_oauth_client_id
 GITHUB_CLIENT_SECRET=your_github_oauth_client_secret
+
 FRONTEND_URL=http://localhost:3000
 CORS_ALLOWED_ORIGINS=http://localhost:3000
-TOKEN_ENCRYPTOR_PASSWORD=your_token_encryptor_password
-TOKEN_ENCRYPTOR_SALT=your_token_encryptor_salt
+
+TOKEN_ENCRYPTOR_PASSWORD=your_long_random_secret
+TOKEN_ENCRYPTOR_SALT=your_16_character_hex_salt
 ```
 
-## Running the project
+For the frontend, configure `client/.env.local`:
 
-### 1) Start PostgreSQL
+```env
+NEXT_PUBLIC_API_BASE_URL=http://localhost:8080
+```
+
+**Security:** Never commit `.env`, `.env.local`, real API keys, OAuth secrets, or production database credentials to GitHub. Use Render and Vercel environment-variable settings for production configuration.
+
+## 🚀 Run Locally
+
+### 1. Start PostgreSQL
+
+From the project root:
 
 ```bash
 docker compose up -d
 ```
 
-This starts the Postgres service with pgvector enabled on port `5433`.
+This starts PostgreSQL with pgvector on host port `5433`.
 
-### 2) Start the backend
+### 2. Start the backend
+
+Open a terminal:
 
 ```bash
 cd backend
+```
+
+On Windows PowerShell:
+
+```powershell
+.\mvnw.cmd spring-boot:run
+```
+
+On Linux or macOS:
+
+```bash
 ./mvnw spring-boot:run
 ```
 
-The backend runs on:
+Backend URL: `http://localhost:8080`
 
-- `http://localhost:8080`
+### 3. Start the frontend
 
-### 3) Start the frontend
-
-In a separate terminal:
+Open another terminal:
 
 ```bash
 cd client
@@ -143,48 +211,64 @@ npm install
 npm run dev
 ```
 
-The frontend runs on:
+Frontend URL: `http://localhost:3000`
 
-- `http://localhost:3000`
+### 4. Configure GitHub OAuth for local development
 
-## Typical workflow
+Set your GitHub OAuth App callback URL to:
 
-1. Sign in with GitHub
-2. Connect or select a repository
-3. Index the repository contents into the vector store
-4. Ask AI questions grounded in code context and repository metadata
-5. Review output in the dashboard or chat experience
+```text
+http://localhost:8080/login/oauth2/code/github
+```
 
-## Development notes
+For production, use the deployed backend callback URL instead.
 
-- The backend uses `spring.jpa.hibernate.ddl-auto=update` so database schema changes can be created automatically during local development.
-- `spring.ai.vectorstore.pgvector.initialize-schema=true` enables the vector store schema initialization.
-- The frontend uses the App Router (`app/`) in Next.js.
-- The UI is designed around an AI-assisted developer experience, including repository-focused chat and dashboard interactions.
+## 🔄 Typical Workflow
 
-## Useful commands
+1. Open DevPilot and sign in with GitHub.
+2. Browse connected repositories.
+3. Select a repository and start indexing.
+4. Wait for indexing to finish.
+5. Open a repository chat and ask questions about the code.
+6. Review the AI-generated answers and any available code references.
+
+## 🧰 Useful Commands
 
 ### Backend
 
 ```bash
 cd backend
-./mvnw test
 ./mvnw clean package
+./mvnw test
 ```
+
+On Windows, use `.\mvnw.cmd` instead of `./mvnw` if required.
 
 ### Frontend
 
 ```bash
 cd client
+npm install
 npm run build
 npm run lint
 ```
 
-## Notes
+### Docker
 
-- The PostgreSQL container is configured through `docker-compose.yml` and uses the `pgvector/pgvector:pg16` image.
-- The backend expects GitHub OAuth credentials and Gemini API configuration to be present in `.env` before the app starts.
-- The project is meant for local development and experimentation with AI-assisted code understanding workflows.
+```bash
+docker compose up -d
+docker compose ps
+docker compose logs postgres
+docker compose down
+```
+
+## 📝 Development Notes
+
+- Hibernate uses `spring.jpa.hibernate.ddl-auto=update` for development schema updates.
+- Spring AI initializes the pgvector store schema.
+- The Next.js frontend uses the App Router.
+- Repository indexing and AI responses depend on GitHub access, Gemini API availability, and applicable quotas.
+- Production credentials must be configured through hosting-platform environment variables.
 
 ## 👨‍💻 Author
 
@@ -192,7 +276,3 @@ npm run lint
 
 - GitHub: [jayesh-patil03](https://github.com/jayesh-patil03)
 - Portfolio: [jayesh-portfolio-liard.vercel.app](https://jayesh-portfolio-liard.vercel.app/)
-
-## License
-
-This project does not currently declare a repository license. If you plan to distribute or publish it, add an explicit license file and document the licensing terms.
